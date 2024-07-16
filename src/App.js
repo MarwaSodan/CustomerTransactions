@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import CustomerTable from './components/CustomerTable';
+import TransactionGraph from './components/TransactionGraph';
+import './index.css'; // تأكد من استيراد ملف CSS
 
-function App() {
+const App = () => {
+  const [customers, setCustomers] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/customers')
+      .then((response) => response.json())
+      .then((data) => setCustomers(data));
+
+    fetch('http://localhost:3001/transactions')
+      .then((response) => response.json())
+      .then((data) => setTransactions(data));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h1>Customer Transactions</h1>
+      <CustomerTable customers={customers} transactions={transactions} />
+      <div className="chart-container">
+        <TransactionGraph transactions={transactions} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
